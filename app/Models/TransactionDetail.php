@@ -14,10 +14,13 @@ class TransactionDetail extends Model
     protected $keyType = 'string'; // menetapkan tipe data primary key
     protected $fillable = [
         'transaction_id',
-        'item',
+        'item_id',
         'quantity',
-        'price',
+        'item_unit_id',
+        'note'
     ];
+
+    protected $dates = ["deleted_at"];
 
     /**
      * Get the transaction that owns the transaction detail.
@@ -25,6 +28,13 @@ class TransactionDetail extends Model
     public function transaction()
     {
         return $this->belongsTo(Transaction::class);
+    }
+    public function item(){
+        return $this->belongsTo(Item::class);
+    }
+
+    public function itemUnit(){
+        return $this->belongsTo(ItemUnit::class);
     }
 
     protected static function boot()

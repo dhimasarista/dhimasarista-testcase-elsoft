@@ -14,11 +14,11 @@ class Transaction extends Model
     protected $keyType = 'string'; // menetapkan tipe data primary key
     protected $fillable = [
         'company_id',
-        'company_name',
+        'code',
         'account_id',
         'note',
     ];
-
+    protected $dates = ["deleted_at"];
     /**
      * Get the company that owns the transaction.
      */
