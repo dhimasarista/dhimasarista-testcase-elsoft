@@ -14,7 +14,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
     protected $primaryKey = "id";
-    public $incrementing = false; // untuk menandakan bahwa primary key bukan incrementing integer
+    public $incrementing = false;
     protected $keyType = 'string'; // menetapkan tipe data primary key
     protected $fillable = [
         'name',
@@ -40,5 +40,10 @@ class User extends Authenticatable
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+    // Memeriksa status is_admin
+    public static function checkIsActive($username){
+        $user = self::where("username", $username)->where("is_active", true)->first();
+        return $user ? true : false;
     }
 }

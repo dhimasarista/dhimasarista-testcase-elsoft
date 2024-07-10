@@ -12,7 +12,7 @@ class CreateTransactionsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->string('company_name');
+            $table->string('code');
             $table->uuid('account_id')->nullable();
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->text('note')->nullable();

@@ -12,9 +12,13 @@ class CreateTransactionDetailsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('transaction_id');
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
-            $table->string('item');
+            $table->uuid('item_id');
+            $table->foreign("item_id")->references("id")->on("items");
+            $table->text('note')->nullable();
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
+            $table->uuid("item_unit_id");
+            $table->foreign("item_unit_id")->references("id")->on("item_units");
+            // $table->decimal('price', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });

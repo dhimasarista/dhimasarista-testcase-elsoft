@@ -25,6 +25,7 @@ class Item extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+    protected $dates = ["deleted_at"];
     // Definisi relasi belongsTo untuk setiap foreign key
     public function company()
     {

@@ -10,7 +10,7 @@
     <!-- Content Row -->
     <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
-            <a href="/" class="card border-left-success shadow h-100 py-2 text-decoration-none">
+            <a href="/items" class="card border-left-success shadow h-100 py-2 text-decoration-none">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
@@ -33,7 +33,7 @@
             </a>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">
-            <a href="/" class="card border-left-success shadow h-100 py-2 text-decoration-none">
+            <a href="/transactions" class="card border-left-success shadow h-100 py-2 text-decoration-none">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">

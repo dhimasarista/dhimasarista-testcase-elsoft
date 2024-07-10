@@ -34,9 +34,9 @@
         $('#itemType').val('');
         $('#code-item').val('');
         $('#title').val('');
-        $('#itemGroup').val('');
-        $('#itemAccountGroup').empty(); // Kosongkan select itemAccountGroup
-        $('#itemUnit').val('');
+        $('#itemGroup').prop('selectedIndex', 0).trigger('change');
+        $('#itemAccountGroup').prop('selectedIndex', 0).trigger('change');
+        $('#itemUnit').prop('selectedIndex', 0).trigger('change');
         $('#currency').val('');
         $('#salesAmount').val('');
         $('#purchaseCurrency').val('');
@@ -46,6 +46,7 @@
 
     function edit(id) {
         // Lakukan request AJAX untuk mengambil data item berdasarkan ID
+        TopLoaderService.start()
         $.ajax({
             url: '/items/' + id,
             method: 'GET',
@@ -72,6 +73,7 @@
                 alert('Failed to fetch item. Please try again.');
             },
             complete: function (data){
+                TopLoaderService.end()
                 var itemAccountGroupId = data.item.item_account_group_id;
                 $('#itemAccountGroup option').each(function() {
                     if ($(this).val() == itemAccountGroupId) {
@@ -86,7 +88,7 @@
     function deleteItem(id) {
         // Lakukan konfirmasi penghapusan
         if (confirm('Are you sure you want to delete this item?')) {
-            // Lakukan request AJAX untuk menghapus item berdasarkan ID
+            TopLoaderService.start()
             $.ajax({
                 url: '/items/' + id,
                 method: 'DELETE',
@@ -94,6 +96,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
+                    TopLoaderService.end()
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -104,6 +107,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr);
+                    TopLoaderService.end()
                     alert('Failed to delete item. Please try again.');
                 }
             });
@@ -266,61 +270,64 @@
 <script>
     // Event listener untuk tombol Save
     $('#submit-item-form').on('click', function() {
-    var formData = {
-        company_id: $('#companyName').val(), // Adjust according to the selected company id
-        item_type_id: $('#itemType').val(),
-        label: $('#title').val(),
-        item_group_id: $('#itemGroup').val(),
-        item_account_group_id: $('#itemAccountGroup').val(),
-        item_unit_id: $('#itemUnit').val(),
-        is_active: $('#isActive').is(':checked') ? 1 : 0,
-        code: $('#code-item').val() === "" ? "<<Auto>>" : $('#code-item').val(),
-    };
+        TopLoaderService.start()
+        var formData = {
+            company_id: $('#companyName').val(), // Adjust according to the selected company id
+            item_type_id: $('#itemType').val(),
+            label: $('#title').val(),
+            item_group_id: $('#itemGroup').val(),
+            item_account_group_id: $('#itemAccountGroup').val(),
+            item_unit_id: $('#itemUnit').val(),
+            is_active: $('#isActive').is(':checked') ? 1 : 0,
+            code: $('#code-item').val() === "" ? "<<Auto>>" : $('#code-item').val(),
+        };
 
-    var url = "";
-    var method = "";
+        var url = "";
+        var method = "";
 
-    if ($('#item-form').attr('data-form-type') === 'edit-item') {
-        // Edit item: PUT request
-        var itemId = $('#item-form').attr('data-item-id');
-        url = `/items/${itemId}`;
-        method = 'PUT';
-    } else {
-        // Add new item: POST request
-        url = "/items";
-        method = 'POST';
-    }
-
-    // Perform AJAX request
-    $.ajax({
-        url: url,
-        type: method,
-        data: formData,
-        dataType: 'json',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: response.message
-            }).then(() => {
-                cleanForm();
-                $('#item-table').DataTable().ajax.reload();
-                $('#add-product-modal').modal('hide');
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Failed to save item'
-            });
+        if ($('#item-form').attr('data-form-type') === 'edit-item') {
+            // Edit item: PUT request
+            var itemId = $('#item-form').attr('data-item-id');
+            url = `/items/${itemId}`;
+            method = 'PUT';
+        } else {
+            // Add new item: POST request
+            url = "/items";
+            method = 'POST';
         }
+
+        // Perform AJAX request
+        $.ajax({
+            url: url,
+            type: method,
+            data: formData,
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                TopLoaderService.end()
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message
+                }).then(() => {
+                    cleanForm();
+                    $('#item-table').DataTable().ajax.reload();
+                    $('#add-product-modal').modal('hide');
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr);
+                TopLoaderService.end()
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to save item'
+                });
+            }
+        });
     });
-});
 
 
     // Event listener untuk tombol Close
