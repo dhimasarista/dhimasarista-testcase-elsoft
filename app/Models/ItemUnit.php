@@ -9,12 +9,9 @@ use Illuminate\Support\Str;
 class ItemUnit extends Model
 {
     use HasFactory, SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $primaryKey = "id";
+    public $incrementing = false; // untuk menandakan bahwa primary key bukan incrementing integer
+    protected $keyType = 'string'; // menetapkan tipe data primary key
     protected $fillable = [
         'name',
     ];

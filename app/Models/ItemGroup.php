@@ -9,7 +9,9 @@ use Illuminate\Support\Str;
 class ItemGroup extends Model
 {
     use HasFactory, SoftDeletes;
-
+    protected $primaryKey = "id";
+    public $incrementing = false; // untuk menandakan bahwa primary key bukan incrementing integer
+    protected $keyType = 'string'; // menetapkan tipe data primary key
     /**
      * The attributes that are mass assignable.
      *

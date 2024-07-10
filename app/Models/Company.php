@@ -9,9 +9,9 @@ use Illuminate\Support\Str;
 class Company extends Model
 {
     use HasFactory;
-    protected $table= "companies";
     protected $primaryKey = "id";
-
+    public $incrementing = false; // untuk menandakan bahwa primary key bukan incrementing integer
+    protected $keyType = 'string'; // menetapkan tipe data primary key
     protected $fillable = [
         "name",
     ];

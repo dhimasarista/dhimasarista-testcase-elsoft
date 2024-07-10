@@ -9,62 +9,46 @@ use Illuminate\Support\Str;
 class Item extends Model
 {
     use HasFactory, SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $primaryKey = "id";
+    public $incrementing = false; // untuk menandakan bahwa primary key bukan incrementing integer
+    protected $keyType = 'string'; // menetapkan tipe data primary key
     protected $fillable = [
         'company_id',
-        'item_type',
+        'item_type_id',
         'code',
         'label',
-        'item_group',
-        'item_account_group',
-        'item_unit',
+        'item_group_id',
+        'item_account_group_id',
+        'item_unit_id',
         'is_active',
     ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'is_active' => 'boolean',
     ];
-
-    /**
-     * Get the company that owns the item.
-     */
+    // Definisi relasi belongsTo untuk setiap foreign key
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
-    /**
-     * Get the item group associated with the item.
-     */
-    public function group()
+    public function itemType()
     {
-        // return $this->belongsTo(ItemGroup::class, 'item_group');
+        return $this->belongsTo(ItemType::class, 'item_type_id');
     }
 
-    /**
-     * Get the item account group associated with the item.
-     */
-    public function accountGroup()
+    public function itemGroup()
     {
-        // return $this->belongsTo(ItemAccountGroup::class, 'item_account_group');
+        return $this->belongsTo(ItemGroup::class, 'item_group_id');
     }
 
-    /**
-     * Get the item unit associated with the item.
-     */
-    public function unit()
+    public function itemAccountGroup()
     {
-        // return $this->belongsTo(ItemUnit::class, 'item_unit');
+        return $this->belongsTo(ItemAccountGroup::class, 'item_account_group_id');
+    }
+
+    public function itemUnit()
+    {
+        return $this->belongsTo(ItemUnit::class, 'item_unit_id');
     }
 
     // method untuk membuat uuid secara otomatis saat data baru dibuat
