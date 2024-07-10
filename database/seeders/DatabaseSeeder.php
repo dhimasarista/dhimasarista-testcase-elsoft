@@ -1,10 +1,11 @@
 <?php
 
 namespace Database\Seeders;
-
+use App\Models\Company;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +14,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $uuidCompany = Str::uuid()->toString();
+        Company::create([
+            "id" => $uuidCompany,
+            "name" => "Test Case",
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::create([
+            'name' => 'Test Case',
+            'username' => "testcase",
+            "password" => "testcase123",
+            "company_id" => $uuidCompany,
         ]);
     }
 }
