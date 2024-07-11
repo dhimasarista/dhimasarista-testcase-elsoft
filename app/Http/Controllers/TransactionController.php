@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Item;
+use App\Models\ItemUnit;
 use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,8 +20,12 @@ class TransactionController extends Controller
     public function index()
     {
         $accounts = Account::all();
+        $items = Item::all();
+        $itemUnits = ItemUnit::all();
         return view("transaction", [
             "accounts" => $accounts,
+            "items" => $items,
+            "itemUnits" => $itemUnits
         ]);
     }
 
@@ -45,7 +51,12 @@ class TransactionController extends Controller
     }
 
     public function findById($id){
-        $transaction = Transaction::find($id);
+        $transaction = Transaction::with([
+            "company",
+            "account",
+            "status"
+        ])->whereNull("deleted_at")->find($id);
+        $transaction->date = Carbon::parse($transaction->created_at)->format('d M Y');
         return response()->json([
             "transaction" => $transaction,
             "status" => 200,
@@ -165,5 +176,22 @@ class TransactionController extends Controller
             'message' => 'Success delete transaction',
             'status' => 200
         ]);
+    }
+    public function findAllDetailById($id)
+    {
+        try {
+            $transactionDetails = TransactionDetail::with(['itemUnit', 'item'])
+                ->where('transaction_id', $id)
+                ->get();
+            return response()->json([
+                'transaction_details' => $transactionDetails,
+                'status' => 200,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to fetch transaction details.',
+                'status' => 500,
+            ], 500);
+        }
     }
 }

@@ -34,7 +34,8 @@ Route::prefix("transactions")->group(function () {
     Route::get("/id/{id}", [TransactionController::class, "findById"]);
     Route::post("", [TransactionController::class, "store"]);
     Route::put('/{id}', [TransactionController::class, 'update']);
-    Route::delete('/transactions/{id}', [TransactionController::class, 'softDelete']);
+    Route::delete('/{id}', [TransactionController::class, 'softDelete']);
+    Route::get('/detail/id/{id}', [TransactionController::class, 'findAllDetailById']);
 });
 
 Route::get('/item-account-groups/{id}', function ($id) {
