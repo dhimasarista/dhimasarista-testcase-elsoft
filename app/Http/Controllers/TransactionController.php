@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Item;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -34,12 +35,20 @@ class TransactionController extends Controller
         ])->whereNull("deleted_at")->get();
         $formattedTransactions = $transactions->map(function ($transaction, $index) {
             $transaction->number = $index + 1;
-            $transaction->date = Carbon::parse($transaction->update_at)->format('d M Y');
+            $transaction->date = Carbon::parse($transaction->created_at)->format('d M Y');
             return $transaction;
         });
         return response()->json([
             "transactions" => $formattedTransactions,
             "status" => 200
+        ]);
+    }
+
+    public function findById($id){
+        $transaction = Transaction::find($id);
+        return response()->json([
+            "transaction" => $transaction,
+            "status" => 200,
         ]);
     }
 
@@ -50,7 +59,7 @@ class TransactionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'code' => 'required|string',
-            'account_id' => 'nullable|uuid',
+            'account_id' => 'required|uuid',
             'note' => 'nullable|string',
             'date' => 'nullable|string'
         ]);
@@ -70,7 +79,7 @@ class TransactionController extends Controller
             'code' => $code,
             'account_id' => $request->input('account_id'),
             'note' => $request->input('note'),
-            'updated_at' => $request->input('date'),
+            'created_at' => $request->input('date'),
         ]);
 
         return response()->json([
@@ -100,14 +109,61 @@ class TransactionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|string',
+            'account_id' => 'required|uuid',
+            'note' => 'nullable|string',
+            'date' => 'nullable|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors(),
+                'status' => 400
+            ], 400);
+        }
+
+        $transaction = Transaction::find($id);
+        if (!$transaction) {
+            return response()->json([
+                'error' => 'Transaction not found',
+                'status' => 404
+            ], 404);
+        }
+
+        $transaction->code = $request->input('code');
+        $transaction->account_id = $request->input('account_id');
+        $transaction->note = $request->input('note');
+        $transaction->updated_at = $request->input('date', Carbon::now()); // Update the date if provided, otherwise use the current date
+
+        $transaction->save();
+
+        return response()->json([
+            'message' => 'Success update transaction',
+            'status' => 200
+        ]);
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function softDelete(string $id)
     {
-        //
+        $transaction = Transaction::find($id);
+
+        if (!$transaction) {
+            return response()->json([
+                'error' => 'Transaction not found',
+                'status' => 404
+            ], 404);
+        }
+
+        $transaction->delete();
+
+        return response()->json([
+            'message' => 'Success delete transaction',
+            'status' => 200
+        ]);
     }
 }

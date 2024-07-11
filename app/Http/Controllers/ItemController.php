@@ -50,6 +50,12 @@ class ItemController extends Controller
     }
     public function findById($id){
         $item = Item::find($id);
+        if (!$item) {
+            return response()->json([
+                'message' => 'Item not found',
+                'status' => 404
+            ], 404);
+        }
         return response()->json([
             "item" => $item,
             "status" => 200
@@ -100,22 +106,6 @@ class ItemController extends Controller
             'message' => "Success create item",
             'status' => 200
         ], 201);
-    }
-    public function show(string $id)
-    {
-        $item = Item::find($id);
-
-        if (!$item) {
-            return response()->json([
-                'message' => 'Item not found',
-                'status' => 404
-            ], 404);
-        }
-
-        return response()->json([
-            'item' => $item,
-            'status' => 200
-        ], 200);
     }
     public function update(Request $request, string $id)
     {

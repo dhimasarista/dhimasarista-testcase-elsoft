@@ -24,7 +24,6 @@ Route::prefix("items")->group(function () {
     Route::get("/id/{id}", [ItemController::class, "findById"]);
     Route::get("list", [ItemController::class, "findAll"]);
     Route::post("", [ItemController::class, "store"]);
-    Route::get("/{id}", [ItemController::class, "show"]);
     Route::put("/{id}", [ItemController::class, "update"]);
     Route::delete("/{id}", [ItemController::class, "softDelete"]);
 });
@@ -32,7 +31,10 @@ Route::prefix("items")->group(function () {
 Route::prefix("transactions")->group(function () {
     Route::get("", [TransactionController::class, "index"]);
     Route::get("/list", [TransactionController::class, "findAll"]);
+    Route::get("/id/{id}", [TransactionController::class, "findById"]);
     Route::post("", [TransactionController::class, "store"]);
+    Route::put('/{id}', [TransactionController::class, 'update']);
+    Route::delete('/transactions/{id}', [TransactionController::class, 'softDelete']);
 });
 
 Route::get('/item-account-groups/{id}', function ($id) {
