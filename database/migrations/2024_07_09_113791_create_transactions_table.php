@@ -16,6 +16,8 @@ class CreateTransactionsTable extends Migration
             $table->uuid('account_id')->nullable();
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->text('note')->nullable();
+            $table->integer("status_id")->nullable();
+            $table->foreign("status_id")->references("id")->on("statuses");
             $table->timestamps();
             $table->softDeletes();
         });
