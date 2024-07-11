@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\ItemGroup;
 use App\Models\ItemType;
 use App\Models\ItemUnit;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,13 +16,20 @@ class ItemController extends Controller
 {
     public function index()
     {
+        $username = session('username');
+
         $itemGroups = ItemGroup::all();
         $itemUnits = ItemUnit::all();
         $currencies = Currency::all();
+
+        // Cari company berdasarkan company_id user
+        $user = User::where("username", $username)->first();
+        $companyName = $user && $user->company ? $user->company->name : null ;
         return view("item", [
             "itemGroups" => $itemGroups,
             "itemUnits" => $itemUnits,
             "currencies" => $currencies,
+            "companyName" => $companyName
         ]);
     }
 
@@ -62,15 +70,9 @@ class ItemController extends Controller
                 'status' => 400
             ], 400);
         }
-
-        // Cari perusahaan berdasarkan nama 'testcase'
-        $company = Company::where("name", "Test Case")->first();
-        if (!$company) {
-            return response()->json([
-                'error' => 'Company not found',
-                'status' => 404
-            ], 404);
-        }
+        $username = session('username');
+        // Cari company berdasarkan company_id user
+        $user = User::where("username", $username)->first();
 
         // Cari jenis item (item_type) berdasarkan nama 'Product'
         $itemType = ItemType::where("name", "Product")->first();
@@ -83,7 +85,7 @@ class ItemController extends Controller
 
         // Buat array data untuk item baru
         $data = $request->all();
-        $data['company_id'] = $company->id;
+        $data['company_id'] = $user->company_id;
         $data['item_type_id'] = $itemType->id;
 
         // Generate random code if <<Auto>> is selected
@@ -92,11 +94,11 @@ class ItemController extends Controller
         }
 
         // Simpan item baru
-        $item = Item::create($data);
+        Item::create($data);
 
         return response()->json([
-            'item' => $item,
-            'status' => 201
+            'message' => "Success create item",
+            'status' => 200
         ], 201);
     }
     public function show(string $id)

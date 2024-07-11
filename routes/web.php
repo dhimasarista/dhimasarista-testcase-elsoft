@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\TransactionController;
 use App\Models\ItemAccountGroup;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get("/{id}", [ItemController::class, "show"]);
         Route::put("/{id}", [ItemController::class, "update"]);
         Route::delete("/{id}", [ItemController::class, "softDelete"]);
+    });
+
+    Route::prefix("transactions")->group(function(){
+        Route::get("", [TransactionController::class, "index"]);
     });
 
     Route::get('/item-account-groups/{id}', function($id){

@@ -61,12 +61,11 @@
                 $('#itemGroup').val(response.item.item_group_id).trigger('change');
                 $('#itemUnit').val(response.item.item_unit_id);
                 $('#isActive').prop('checked', response.item.is_active);
-                // Tampilkan modal edit
-                $('#add-product-modal').modal('show');
                 $('#item-form').attr('data-form-type', "edit-item")
                 $('#item-form').attr('data-item-id', response.item.id);
                 fetchItemAccountGroups($('#itemGroup').val());
-
+                // Tampilkan modal edit
+                $('#add-product-modal').modal('show');
             },
             error: function(xhr, status, error) {
                 console.error('Failed to fetch item:', error);
@@ -118,10 +117,16 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-evenly mb-4">
         <h1 class="h3 mb-2 text-gray-800">List Item</h1>
-        <a href="#" data-toggle="modal" data-target="#add-product-modal" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" style="margin-left: 10px !important">
+        <a href="#" id="add-product-button" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" style="margin-left: 10px !important">
             <i class="fas  fa-sm text-white-50">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19 12.998h-6v6h-2v-6H5v-2h6v-6h2v6h6z"/></svg>
             </i> Add Product</a>
+            <script>
+                $("#add-product-button").on("click", e => {
+                    cleanForm()
+                    $('#add-product-modal').modal('show');
+                })
+            </script>
     </div>
     <!-- DataTales -->
     <div class="card shadow mb-4">
@@ -165,14 +170,13 @@
                 <form id="item-form">
                     <div class="form-row">
                         <div class="form-group col-6">
-                            <label for="companyName">Company Name</label>
-                            {{-- <input type="text" class="form-control" id="companyName" placeholder="Company Name"> --}}
-                            <p>testcase</p>
+                            <label for="companyName">Company</label>
+                            <p><b>{{ $companyName }}</b></p>
                         </div>
                         <div class="form-group col-6">
                             <label for="itemType">Item Type</label>
                             {{-- <input type="text" class="form-control" id="itemType" placeholder="Item Type"> --}}
-                            <p>Product</p>
+                            <p><b>Product</b></p>
                         </div>
                     </div>
                     <div class="form-row">
@@ -261,8 +265,8 @@
 
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" id="close-item-form">Close</button>
-                <button type="button" class="btn btn-primary" id="submit-item-form">Save</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal" id="close-item-form">Close</button>
+                <button type="button" class="btn btn-success" id="submit-item-form">Save</button>
             </div>
         </div>
     </div>

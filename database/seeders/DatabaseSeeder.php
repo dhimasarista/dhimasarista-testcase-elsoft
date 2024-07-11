@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Seeders;
+
+use App\Models\Account;
 use App\Models\Company;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,6 +27,28 @@ class DatabaseSeeder extends Seeder
             'username' => "testcase",
             "password" => "testcase123",
             "company_id" => $uuidCompany,
+        ]);
+        Account::insert([
+            [
+                "id" => Str::uuid()->toString(),
+                "name" => "Biaya Adm Bank - 800-01 - 800-01",
+                "company_id" => $uuidCompany
+            ],
+            [
+                "id" => Str::uuid()->toString(),
+                "name" => "Ak. Penyusutan Gedung - 192-01 - 192-01",
+                "company_id" => $uuidCompany
+            ],
+            [
+                "id" => Str::uuid()->toString(),
+                "name" => "Ak. Penyusutan Inventaris - 192-01 - 192-01",
+                "company_id" => $uuidCompany
+            ],
+            [
+                "id" => Str::uuid()->toString(),
+                "name" => "Ak. Penyusutan Kendaraan - 192-01 - 192-01",
+                "company_id" => $uuidCompany
+            ],
         ]);
     }
 }

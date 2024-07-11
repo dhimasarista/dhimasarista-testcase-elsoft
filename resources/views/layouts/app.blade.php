@@ -1,4 +1,6 @@
-
+@php
+    $path = request()->path();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -55,7 +57,7 @@
             </a>
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item {{ $path === 'dashboard' ? 'active' : '' }}">
                 <a class="nav-link" href="/dashboard">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span>
@@ -66,7 +68,7 @@
             {{-- <div class="sidebar-heading">Interface</div> --}}
 
             <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
+            <li class="nav-item {{ $path === 'items' ? 'active' : '' }}">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
@@ -82,10 +84,10 @@
             </li>
 
             <!-- Nav Item - Charts -->
-            <li class="nav-item">
+            <li class="nav-item {{ $path === 'transactions' ? 'active' : '' }}">
                 <a class="nav-link" href="/transactions">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Stocks</span></a>
+                    <span>Transactions</span></a>
             </li>
 
             <!-- Divider -->
@@ -119,7 +121,7 @@
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
                                 aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-success" type="button">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
